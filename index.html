@@ -1,0 +1,840 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#fbf6ef" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="description" content="致 妈妈，母亲节快乐 — 我和妹妹的一封情书" />
+<title>致 妈妈 · 母亲节快乐</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+SC:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#fbf6ef;
+    --cream-2:#f3ebde;
+    --ink:#1d1311;
+    --ink-soft:#3a2a26;
+    --rose:#c84968;
+    --rose-deep:#8b2842;
+    --rose-pale:#e8b4bc;
+    --gold:#8a6533;
+    --shadow:0 30px 80px -30px rgba(40,15,15,.35);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--cream);color:var(--ink);overflow-x:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{font-family:"Noto Serif SC","Cormorant Garamond",Georgia,serif;font-weight:400;line-height:1.55;cursor:none}
+  img{display:block;max-width:100%}
+
+  /* ---------- Custom cursor ---------- */
+  .cursor,.cursor-ring{
+    position:fixed;left:0;top:0;pointer-events:none;z-index:9999;
+    transform:translate(-50%,-50%);transition:transform .2s ease, opacity .3s ease;
+    mix-blend-mode:multiply;
+  }
+  .cursor{width:6px;height:6px;border-radius:50%;background:var(--rose-deep)}
+  .cursor-ring{width:34px;height:34px;border:1px solid var(--rose);border-radius:50%;opacity:.5;transition:transform .35s cubic-bezier(.2,.7,.3,1), opacity .3s, width .3s, height .3s, border-color .3s}
+  .cursor-ring.hover{width:62px;height:62px;border-color:var(--rose-deep);background:rgba(232,180,188,.18)}
+  @media (hover:none){.cursor,.cursor-ring{display:none}body{cursor:auto}}
+
+  /* ---------- Falling petals ---------- */
+  .petals{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden}
+  .petal{position:absolute;top:-40px;width:14px;height:14px;background:radial-gradient(circle at 30% 30%, #f8c8d0, #d97a90 70%, transparent 75%);border-radius:60% 40% 60% 40% / 50% 60% 40% 50%;opacity:.65;will-change:transform}
+
+  /* ---------- Loading curtain ---------- */
+  .curtain{
+    position:fixed;inset:0;background:#0c0606;z-index:1000;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;color:#f3e9dd;
+    transition:opacity 1.2s ease, visibility 0s linear 1.2s;
+  }
+  .curtain.gone{opacity:0;visibility:hidden}
+  .curtain .date{font-family:"Cormorant Garamond",serif;font-style:italic;letter-spacing:.4em;font-size:13px;opacity:0;animation:fadeIn 1.2s .3s forwards;color:#c89b6c}
+  .curtain .ded{margin-top:36px;font-size:clamp(28px,5vw,56px);letter-spacing:.4em;font-weight:300;opacity:0;animation:fadeIn 1.4s 1.2s forwards}
+  .curtain .sub{margin-top:24px;font-family:"Cormorant Garamond",serif;font-style:italic;letter-spacing:.18em;font-size:18px;color:#e8b4bc;opacity:0;animation:fadeIn 1.4s 2.2s forwards}
+  .curtain .line{width:0;height:1px;background:#b58a55;margin:48px 0;animation:lineGrow 1.4s 2.4s forwards}
+  @keyframes fadeIn{to{opacity:1}}
+  @keyframes lineGrow{to{width:120px}}
+
+  /* ---------- Top bar ---------- */
+  .topbar{position:fixed;top:0;left:0;right:0;padding:22px 36px;display:flex;justify-content:space-between;align-items:center;z-index:100;color:var(--ink-soft);font-size:12px;letter-spacing:.3em;text-transform:uppercase;mix-blend-mode:multiply}
+  .topbar .brand{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:18px;letter-spacing:.2em;text-transform:none;color:var(--rose-deep)}
+  .topbar nav a{color:var(--ink-soft);text-decoration:none;margin-left:24px;font-size:11px;letter-spacing:.32em;opacity:.55;transition:opacity .3s}
+  .topbar nav a:hover{opacity:1;color:var(--rose-deep)}
+  .topbar .audio{cursor:none;background:none;border:1px solid rgba(40,15,15,.2);color:var(--ink-soft);padding:8px 14px;border-radius:999px;font-size:10px;letter-spacing:.3em;transition:all .3s}
+  .topbar .audio:hover{border-color:var(--rose-deep);color:var(--rose-deep)}
+
+  /* ---------- Reveal animation ---------- */
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity 1.2s cubic-bezier(.2,.7,.2,1), transform 1.2s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal-d-1{transition-delay:.15s}
+  .reveal-d-2{transition-delay:.3s}
+  .reveal-d-3{transition-delay:.45s}
+  .reveal-d-4{transition-delay:.6s}
+
+  /* ---------- Scene shell ---------- */
+  section{position:relative;z-index:10}
+
+  /* ---------- Scene 1: Hero ---------- */
+  .hero{min-height:100vh;display:grid;grid-template-columns:1.05fr 1fr;align-items:center;padding:120px 6vw 80px;gap:6vw}
+  .hero-text .chap{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:14px;letter-spacing:.5em;color:var(--gold);text-transform:uppercase}
+  .hero-text h1{font-size:clamp(72px,11vw,168px);line-height:.95;font-weight:400;letter-spacing:-.02em;margin-top:24px;color:var(--ink)}
+  .hero-text h1 em{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--rose-deep);font-weight:300}
+  .hero-text .lead{margin-top:36px;font-size:clamp(16px,1.4vw,20px);max-width:520px;color:var(--ink-soft);line-height:1.9}
+  .hero-text .meta{margin-top:40px;display:flex;gap:32px;align-items:center;font-size:12px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase}
+  .hero-text .meta span:before{content:"";display:inline-block;width:24px;height:1px;background:var(--gold);vertical-align:middle;margin-right:14px}
+  .hero-img{position:relative;aspect-ratio:3/4;border-radius:4px;overflow:hidden;box-shadow:var(--shadow)}
+  .hero-img img{width:100%;height:100%;object-fit:cover;transform:scale(1.05);transition:transform 14s ease}
+  .hero-img.in img{transform:scale(1)}
+  .hero-img:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(20,10,10,.6))}
+  .hero-img .tag{position:absolute;left:24px;bottom:24px;color:#fbf6ef;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:14px;letter-spacing:.3em;z-index:2}
+  .scroll-cue{position:absolute;left:50%;bottom:36px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;color:var(--ink-soft);font-size:10px;letter-spacing:.4em;text-transform:uppercase;opacity:.7}
+  .scroll-cue:after{content:"";width:1px;height:42px;margin-top:14px;background:var(--ink-soft);animation:scrollLine 2.2s ease-in-out infinite}
+  @keyframes scrollLine{0%{transform-origin:top;transform:scaleY(0)}50%{transform-origin:top;transform:scaleY(1)}51%{transform-origin:bottom;transform:scaleY(1)}100%{transform-origin:bottom;transform:scaleY(0)}}
+
+  /* ---------- Section heading ---------- */
+  .scene{padding:160px 6vw}
+  .eyebrow{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:13px;letter-spacing:.5em;color:var(--gold);text-transform:uppercase;display:flex;align-items:center;gap:18px}
+  .eyebrow:before{content:"";width:48px;height:1px;background:var(--gold)}
+  .scene h2{font-size:clamp(44px,6vw,84px);line-height:1.05;font-weight:400;margin-top:22px;letter-spacing:-.01em}
+  .scene h2 em{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--rose-deep);font-weight:300}
+  .scene .sub{margin-top:24px;max-width:620px;color:var(--ink-soft);font-size:17px;line-height:1.95}
+
+  /* ---------- Scene 2: Gallery ---------- */
+  .gallery{position:relative}
+  .gallery .grid{margin-top:80px;display:grid;grid-template-columns:repeat(12,1fr);gap:30px}
+  .card{position:relative;overflow:hidden;border-radius:3px;background:#eee;box-shadow:var(--shadow);transform:translateY(60px);opacity:0;transition:opacity 1s ease, transform 1.1s cubic-bezier(.2,.7,.2,1)}
+  .card.in{opacity:1;transform:none}
+  .card img{width:100%;height:100%;object-fit:cover;transition:transform 1.4s cubic-bezier(.2,.7,.2,1), filter .8s}
+  .card:hover img{transform:scale(1.06)}
+  .card .num{position:absolute;top:18px;left:20px;color:#fff;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:13px;letter-spacing:.3em;mix-blend-mode:difference;z-index:2}
+  .card .cap{position:absolute;left:24px;bottom:22px;right:24px;color:#fff;z-index:2;text-shadow:0 2px 18px rgba(0,0,0,.3)}
+  .card .cap .t{font-size:13px;letter-spacing:.4em;text-transform:uppercase;color:var(--rose-pale);font-family:"Cormorant Garamond",serif;font-style:italic}
+  .card .cap .d{font-size:18px;margin-top:6px}
+  .card:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(20,10,10,.78));opacity:.95;z-index:1}
+  .card .vt{position:absolute;right:14px;top:50%;transform:translateY(-50%) rotate(180deg);writing-mode:vertical-rl;color:rgba(255,255,255,.7);font-size:10px;letter-spacing:.5em;text-transform:uppercase;z-index:2}
+
+  .g-1{grid-column:1/span 5;aspect-ratio:3/4}
+  .g-2{grid-column:6/span 4;aspect-ratio:3/4;margin-top:80px}
+  .g-3{grid-column:10/span 3;aspect-ratio:3/4;margin-top:140px}
+  .g-4{grid-column:2/span 4;aspect-ratio:3/4;margin-top:-60px}
+  .g-5{grid-column:7/span 5;aspect-ratio:4/3;margin-top:-30px}
+
+  /* ---------- Quote section ---------- */
+  .quote{padding:140px 6vw;text-align:center;position:relative}
+  .quote .q{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:clamp(28px,3.6vw,52px);max-width:1000px;margin:0 auto;line-height:1.45;color:var(--ink)}
+  .quote .q span{color:var(--rose-deep)}
+  .quote .a{margin-top:36px;font-size:12px;letter-spacing:.5em;color:var(--gold);text-transform:uppercase}
+
+  /* ---------- Scene 3: Parents ---------- */
+  .parents{display:grid;grid-template-columns:1.1fr 1fr;align-items:center;gap:6vw;padding:160px 6vw}
+  .parents .img-wrap{position:relative;aspect-ratio:4/5;border-radius:3px;overflow:hidden;box-shadow:var(--shadow)}
+  .parents .img-wrap img{width:100%;height:100%;object-fit:cover;object-position:center 25%;transform:scale(1.04);transition:transform 14s ease}
+  .parents .img-wrap.in img{transform:scale(1)}
+  .parents .text .yr{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--gold);letter-spacing:.4em;font-size:13px}
+  .parents .text h3{font-size:clamp(36px,5vw,64px);font-weight:400;margin-top:18px;line-height:1.1}
+  .parents .text h3 em{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--rose-deep);font-weight:300}
+  .parents .text p{margin-top:28px;color:var(--ink-soft);font-size:17px;line-height:1.95;max-width:520px}
+  .parents .text .pull{margin-top:40px;padding:24px 28px;border-left:2px solid var(--rose-deep);font-family:"Cormorant Garamond",serif;font-style:italic;font-size:22px;color:var(--ink);line-height:1.6;background:rgba(232,180,188,.12)}
+
+  /* ---------- Scene 4: Family ---------- */
+  .family{position:relative;padding:0;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+  .family .img{position:relative;width:88vw;margin:0 auto;aspect-ratio:16/10;overflow:hidden;border-radius:3px;box-shadow:var(--shadow)}
+  .family .img img{width:100%;height:100%;object-fit:cover;object-position:center 35%;transform:scale(1.06);transition:transform 16s ease}
+  .family .img.in img{transform:scale(1)}
+  .family .img:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,10,10,.25),transparent 25%,transparent 55%,rgba(20,10,10,.78))}
+  .family .overlay{position:absolute;left:10vw;bottom:10vh;color:#fff;max-width:520px;z-index:3}
+  .family .overlay .eb{color:#e8b4bc;letter-spacing:.5em;font-size:12px;text-transform:uppercase;font-family:"Cormorant Garamond",serif;font-style:italic}
+  .family .overlay h2{color:#fff;font-size:clamp(40px,5vw,72px);margin-top:14px;font-weight:400;line-height:1.05}
+  .family .overlay p{margin-top:18px;color:rgba(255,255,255,.85);font-size:16px;line-height:1.9}
+  .family .meta{position:absolute;right:10vw;bottom:10vh;color:rgba(255,255,255,.7);font-family:"Cormorant Garamond",serif;font-style:italic;font-size:14px;letter-spacing:.3em;text-align:right;z-index:3}
+  .family .meta span{display:block;font-size:11px;color:rgba(255,255,255,.55);margin-top:6px;letter-spacing:.4em;text-transform:uppercase;font-style:normal}
+
+  /* ---------- Scene 5: Letters ---------- */
+  .letters{padding:180px 6vw;background:linear-gradient(180deg,var(--cream) 0%, var(--cream-2) 100%);position:relative}
+  .letters .head{text-align:center;margin-bottom:90px}
+  .letters .grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;max-width:1280px;margin:0 auto}
+  .letter{position:relative;background:#fffdf8;padding:60px 56px;border-radius:3px;box-shadow:0 30px 60px -30px rgba(40,15,15,.18);overflow:hidden}
+  .letter:before{content:"";position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--rose-pale),var(--rose),var(--rose-pale))}
+  .letter .from{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--gold);letter-spacing:.4em;font-size:12px;text-transform:uppercase}
+  .letter h3{margin-top:14px;font-size:32px;font-weight:400;color:var(--ink)}
+  .letter h3 em{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--rose-deep)}
+  .letter .body{margin-top:32px;font-family:"Ma Shan Zheng","Noto Serif SC",cursive;font-size:20px;line-height:2.1;color:var(--ink-soft);white-space:pre-line}
+  .letter .sig{margin-top:36px;text-align:right;font-family:"Ma Shan Zheng",cursive;font-size:24px;color:var(--rose-deep)}
+  .letter .stamp{position:absolute;right:36px;top:34px;width:60px;height:60px;border:1.5px dashed var(--rose);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--rose-deep);font-family:"Cormorant Garamond",serif;font-style:italic;font-size:11px;text-align:center;line-height:1.2;letter-spacing:.1em;transform:rotate(-12deg);opacity:.7}
+
+  /* ---------- Scene 6: Final / Send heart ---------- */
+  .final{position:relative;min-height:100vh;display:grid;grid-template-columns:1fr 1.05fr;align-items:center;gap:6vw;padding:160px 6vw 140px;overflow:hidden}
+  .final .img-wrap{aspect-ratio:3/4;overflow:hidden;border-radius:3px;box-shadow:var(--shadow);position:relative}
+  .final .img-wrap img{width:100%;height:100%;object-fit:cover;transform:scale(1.05);transition:transform 16s ease}
+  .final .img-wrap.in img{transform:scale(1)}
+  .final .img-wrap:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(20,10,10,.45))}
+  .final .text .eb{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--gold);letter-spacing:.5em;font-size:13px;text-transform:uppercase}
+  .final .text h2{font-size:clamp(44px,6vw,84px);font-weight:400;line-height:1.05;margin-top:20px}
+  .final .text h2 em{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--rose-deep);font-weight:300}
+  .final .text p{margin-top:30px;font-size:17px;color:var(--ink-soft);line-height:1.95;max-width:540px}
+
+  .heart-btn{
+    margin-top:50px;display:inline-flex;align-items:center;gap:16px;
+    padding:22px 38px;border-radius:999px;border:none;
+    background:var(--rose-deep);color:#fffcf6;
+    font-family:"Noto Serif SC",serif;font-size:16px;letter-spacing:.2em;
+    cursor:none;transition:all .35s cubic-bezier(.2,.7,.3,1);
+    box-shadow:0 18px 40px -14px rgba(139,40,66,.55);
+    position:relative;overflow:hidden;
+  }
+  .heart-btn:hover{transform:translateY(-3px);box-shadow:0 28px 50px -16px rgba(139,40,66,.65);background:var(--rose)}
+  .heart-btn svg{width:20px;height:20px;fill:#fffcf6;transition:transform .3s}
+  .heart-btn:hover svg{transform:scale(1.15)}
+  .heart-counter{margin-top:24px;color:var(--ink-soft);font-size:13px;letter-spacing:.3em;text-transform:uppercase;font-family:"Cormorant Garamond",serif;font-style:italic}
+  .heart-counter b{color:var(--rose-deep);font-weight:500;font-style:normal;font-family:"Noto Serif SC",serif;font-size:18px;margin:0 6px}
+
+  .flying-heart{position:fixed;pointer-events:none;color:var(--rose-deep);font-size:24px;z-index:200;animation:fly 2.6s cubic-bezier(.2,.7,.3,1) forwards}
+  @keyframes fly{
+    0%{opacity:0;transform:translate(-50%,-50%) scale(.4) rotate(-10deg)}
+    15%{opacity:1;transform:translate(-50%,-50%) scale(1.4) rotate(8deg)}
+    100%{opacity:0;transform:translate(calc(-50% + var(--dx)), calc(-50% - 60vh)) scale(.6) rotate(-30deg)}
+  }
+
+  .epilogue{padding:60px 6vw 100px;text-align:center;position:relative}
+  .epilogue .l{display:inline-block;width:80px;height:1px;background:var(--gold);margin-bottom:32px}
+  .epilogue h4{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:28px;color:var(--ink);font-weight:300;line-height:1.4}
+  .epilogue h4 em{color:var(--rose-deep)}
+  .epilogue .sig{margin-top:30px;font-family:"Ma Shan Zheng",cursive;font-size:22px;color:var(--rose-deep)}
+  .epilogue .date{margin-top:20px;font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--gold);letter-spacing:.4em;font-size:12px}
+
+  /* ---------- Lightbox ---------- */
+  .lightbox{position:fixed;inset:0;background:rgba(15,8,8,.94);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .5s ease, visibility 0s linear .5s;padding:60px}
+  .lightbox.open{opacity:1;visibility:visible;transition:opacity .5s ease}
+  .lightbox img{max-width:88vw;max-height:88vh;object-fit:contain;box-shadow:0 30px 80px -20px rgba(0,0,0,.6);transform:scale(.96);transition:transform .6s cubic-bezier(.2,.7,.3,1)}
+  .lightbox.open img{transform:scale(1)}
+  .lightbox .close{position:absolute;top:30px;right:36px;color:#fff;font-size:28px;cursor:none;background:none;border:none;letter-spacing:.05em}
+  .lightbox .nav{position:absolute;top:50%;transform:translateY(-50%);color:#fff;background:none;border:1px solid rgba(255,255,255,.25);width:54px;height:54px;border-radius:50%;cursor:none;font-size:20px;transition:all .3s}
+  .lightbox .nav:hover{background:rgba(255,255,255,.1);border-color:#fff}
+  .lightbox .prev{left:30px}
+  .lightbox .next{right:30px}
+  .lightbox .meta{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);color:#f3e9dd;font-family:"Cormorant Garamond",serif;font-style:italic;letter-spacing:.3em;font-size:13px}
+
+  /* ---------- Progress bar ---------- */
+  .progress{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--rose-pale),var(--rose-deep));z-index:200;width:0;transition:width .15s linear}
+
+  /* ---------- Tablet & phone ---------- */
+  @media (max-width:880px){
+    body{cursor:auto}
+    .topbar{padding:max(14px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) 14px max(18px, env(safe-area-inset-left))}
+    .topbar nav{display:none}
+    .topbar .brand{font-size:15px}
+    .topbar .audio{padding:7px 12px;font-size:9px;letter-spacing:.25em}
+
+    .curtain .date{font-size:11px;letter-spacing:.32em}
+    .curtain .ded{font-size:32px;letter-spacing:.32em;margin-top:24px}
+    .curtain .line{margin:32px 0}
+    .curtain .sub{font-size:13px;letter-spacing:.14em;padding:0 12vw;text-align:center;line-height:1.6}
+
+    .hero{grid-template-columns:1fr;padding:96px 6vw 110px;gap:36px;min-height:auto}
+    .hero-text .chap{font-size:11px;letter-spacing:.4em}
+    .hero-text h1{font-size:clamp(46px,13vw,68px);line-height:.98}
+    .hero-text .lead{margin-top:24px;font-size:15px;line-height:1.85;max-width:100%}
+    .hero-text .lead br{display:none}
+    .hero-text .meta{margin-top:28px;flex-direction:column;gap:14px;align-items:flex-start;font-size:10px;letter-spacing:.28em}
+    .hero-text .meta span:before{width:18px;margin-right:10px}
+    .hero-img{aspect-ratio:4/5;max-height:70vh;order:-1}
+    .hero-img .tag{font-size:12px;letter-spacing:.24em;left:18px;bottom:18px}
+    .scroll-cue{bottom:24px;font-size:9px;letter-spacing:.34em}
+    .scroll-cue:after{height:32px;margin-top:10px}
+
+    .scene{padding:90px 6vw}
+    .eyebrow{font-size:11px;letter-spacing:.4em;gap:14px}
+    .eyebrow:before{width:32px}
+    .scene h2{font-size:38px;line-height:1.1;margin-top:18px}
+    .scene .sub{font-size:15px;line-height:1.85;margin-top:20px}
+
+    .gallery .grid{margin-top:48px;grid-template-columns:1fr;gap:18px}
+    .g-1,.g-2,.g-3,.g-4,.g-5{grid-column:1/-1;margin:0;aspect-ratio:3/4}
+    .card .num{font-size:11px;top:14px;left:16px}
+    .card .vt{font-size:9px;right:10px}
+    .card .cap{left:18px;right:18px;bottom:18px}
+    .card .cap .t{font-size:11px;letter-spacing:.3em}
+    .card .cap .d{font-size:15px}
+
+    .quote{padding:70px 6vw}
+    .quote .q{font-size:24px;line-height:1.5}
+    .quote .a{font-size:10px;letter-spacing:.4em;margin-top:24px}
+
+    .parents{grid-template-columns:1fr;padding:90px 6vw;gap:36px}
+    .parents .img-wrap{aspect-ratio:4/5;max-height:75vh;margin:0 auto;width:100%}
+    .parents .text h3{font-size:30px;line-height:1.15;margin-top:14px}
+    .parents .text p{font-size:15px;line-height:1.85;margin-top:22px}
+    .parents .text .pull{font-size:18px;padding:18px 22px;margin-top:30px;line-height:1.55}
+    .parents .text .pull br{display:none}
+    .parents .text .yr{font-size:11px;letter-spacing:.32em}
+
+    .family{min-height:auto;padding:80px 0}
+    .family .img{width:92vw;aspect-ratio:4/5}
+    .family .overlay{left:6vw;right:6vw;bottom:5vh;max-width:none}
+    .family .overlay h2{font-size:34px;line-height:1.1}
+    .family .overlay p{font-size:14px;line-height:1.75;margin-top:14px}
+    .family .overlay .eb{font-size:10px;letter-spacing:.32em}
+    .family .meta{display:none}
+
+    .letters{padding:80px 6vw}
+    .letters .head{margin-bottom:48px}
+    .letters .grid{grid-template-columns:1fr;gap:24px}
+    .letter{padding:42px 26px}
+    .letter h3{font-size:24px;margin-top:10px}
+    .letter .from{font-size:10px;letter-spacing:.32em}
+    .letter .body{font-size:17px;line-height:2;margin-top:24px}
+    .letter .sig{font-size:19px;margin-top:26px}
+    .letter .stamp{width:48px;height:48px;font-size:9px;right:24px;top:24px}
+
+    .final{grid-template-columns:1fr;padding:80px 6vw 60px;gap:36px;min-height:auto}
+    .final .img-wrap{aspect-ratio:4/5;max-height:70vh}
+    .final .text h2{font-size:36px;line-height:1.1}
+    .final .text p{font-size:15px;margin-top:22px;line-height:1.85}
+    .heart-btn{margin-top:34px;padding:18px 30px;font-size:15px;letter-spacing:.18em;width:100%;justify-content:center}
+    .heart-counter{margin-top:18px;font-size:12px;letter-spacing:.24em;text-align:center}
+
+    .epilogue{padding:40px 6vw max(80px, env(safe-area-inset-bottom))}
+    .epilogue h4{font-size:22px}
+    .epilogue .sig{font-size:18px;margin-top:22px}
+
+    .lightbox{padding:30px 16px}
+    .lightbox .close{top:18px;right:20px;font-size:32px;width:44px;height:44px;display:flex;align-items:center;justify-content:center}
+    .lightbox .nav{width:42px;height:42px;font-size:18px}
+    .lightbox .prev{left:14px}
+    .lightbox .next{right:14px}
+    .lightbox .meta{font-size:11px;letter-spacing:.24em;bottom:20px}
+  }
+
+  /* ---------- Small phone ---------- */
+  @media (max-width:420px){
+    .scene{padding:74px 5vw}
+    .hero{padding:90px 5vw 100px}
+    .hero-text h1{font-size:44px}
+    .scene h2{font-size:32px}
+    .quote .q{font-size:20px}
+    .parents .text h3{font-size:26px}
+    .family .overlay h2{font-size:28px}
+    .family .img{width:94vw}
+    .letter{padding:36px 22px}
+    .letter .body{font-size:16px;line-height:1.95}
+    .final .text h2{font-size:32px}
+    .topbar .brand{font-size:13px}
+  }
+
+  /* ---------- Reduced motion ---------- */
+  @media (prefers-reduced-motion: reduce){
+    *,*:before,*:after{animation-duration:.01ms !important;transition-duration:.2s !important}
+    .petals{display:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- Curtain -->
+<div class="curtain" id="curtain">
+  <div class="date">2026 · MOTHER&#39;S DAY</div>
+  <div class="ded">致 妈 妈</div>
+  <div class="line"></div>
+  <div class="sub">A love letter from your two children</div>
+</div>
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Petals -->
+<div class="petals" id="petals"></div>
+
+<!-- Top progress -->
+<div class="progress" id="progress"></div>
+
+<!-- Topbar -->
+<header class="topbar">
+  <div class="brand">For Mama</div>
+  <nav>
+    <a href="#hero">起</a>
+    <a href="#gallery">美</a>
+    <a href="#parents">爱</a>
+    <a href="#family">家</a>
+    <a href="#letters">信</a>
+    <a href="#final">永远</a>
+  </nav>
+  <button class="audio" id="audioBtn">♪ MUSIC OFF</button>
+</header>
+
+<!-- Ambient music is synthesized live with the Web Audio API (no external file). -->
+
+<!-- ===== SCENE 1: HERO ===== -->
+<section class="hero" id="hero">
+  <div class="hero-text">
+    <div class="chap reveal">— Chapter One · 起</div>
+    <h1 class="reveal reveal-d-1">妈妈，<br/><em>我们爱你。</em></h1>
+    <p class="lead reveal reveal-d-2">
+      你从不喊苦，也从不抱怨。<br/>
+      所有的难，你都默默地放在自己身后；<br/>
+      所有的好，你都悄悄地留给了我和妹妹。<br/>
+      在我们心里——这世上没有比你更好的妈妈。
+    </p>
+    <div class="meta reveal reveal-d-3">
+      <span>2026 · 母亲节</span>
+      <span>献给最美的你</span>
+    </div>
+  </div>
+  <div class="hero-img reveal reveal-d-2" data-zoom>
+    <img src="photos/hero.jpg" alt="妈妈" />
+    <div class="tag">— Mama, the most beautiful</div>
+  </div>
+  <div class="scroll-cue">SCROLL</div>
+</section>
+
+<!-- ===== SCENE 2: GALLERY ===== -->
+<section class="scene gallery" id="gallery">
+  <div class="reveal">
+    <div class="eyebrow">Chapter Two · 你 的 美</div>
+    <h2>原来妈妈，<br/><em>本来就这样美。</em></h2>
+    <p class="sub">
+      第一次看到这组照片时，我和妹妹都安静了很久。
+      原来在我们没有看见的时候，你也曾这样轻轻地笑、轻轻地坐在花前。
+      你不只是妈妈——你是一个完整的、闪闪发光的女孩。
+    </p>
+  </div>
+
+  <div class="grid">
+    <figure class="card g-1" data-photo="photos/portrait4.jpg" data-cap="花前 · No.01">
+      <img src="photos/portrait4.jpg" alt="妈妈写真"/>
+      <span class="num">01 / 05</span>
+      <span class="vt">In Full Bloom</span>
+      <figcaption class="cap"><div class="t">In Full Bloom</div><div class="d">花前，盛放</div></figcaption>
+    </figure>
+    <figure class="card g-2" data-photo="photos/portrait1.jpg" data-cap="拈花 · No.02">
+      <img src="photos/portrait1.jpg" alt="妈妈写真"/>
+      <span class="num">02 / 05</span>
+      <span class="vt">A Single Rose</span>
+      <figcaption class="cap"><div class="t">A Single Rose</div><div class="d">手中的一枝玫瑰</div></figcaption>
+    </figure>
+    <figure class="card g-3" data-photo="photos/portrait2.jpg" data-cap="逆光 · No.03">
+      <img src="photos/portrait2.jpg" alt="妈妈写真"/>
+      <span class="num">03 / 05</span>
+      <span class="vt">Golden Hour</span>
+      <figcaption class="cap"><div class="t">Golden Hour</div><div class="d">逆光里的你</div></figcaption>
+    </figure>
+    <figure class="card g-4" data-photo="photos/portrait3.jpg" data-cap="安静 · No.04">
+      <img src="photos/portrait3.jpg" alt="妈妈写真"/>
+      <span class="num">04 / 05</span>
+      <span class="vt">Quiet Grace</span>
+      <figcaption class="cap"><div class="t">Quiet Grace</div><div class="d">安静地坐着，也很好看</div></figcaption>
+    </figure>
+    <figure class="card g-5" data-photo="photos/hero.jpg" data-cap="特写 · No.05">
+      <img src="photos/hero.jpg" alt="妈妈写真"/>
+      <span class="num">05 / 05</span>
+      <span class="vt">Up Close</span>
+      <figcaption class="cap"><div class="t">Up Close</div><div class="d">这是我和妹妹眼中，最熟悉的你</div></figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ===== Quote ===== -->
+<section class="quote">
+  <div class="reveal">
+    <p class="q">
+      “世界上有一种最美丽的声音，<br/>
+      <span>那便是母亲的呼唤。”</span>
+    </p>
+    <div class="a">— But Daniele Varè · 但丁</div>
+  </div>
+</section>
+
+<!-- ===== SCENE 3: PARENTS ===== -->
+<section class="parents" id="parents">
+  <div class="img-wrap reveal" data-zoom>
+    <img src="photos/parents.jpg" alt="爸爸妈妈"/>
+  </div>
+  <div class="text">
+    <div class="yr reveal">Chapter Three · 你 与 他</div>
+    <h3 class="reveal reveal-d-1">他在你身边的样子，<br/><em>是我们对爱情，最初的理解。</em></h3>
+    <p class="reveal reveal-d-2">
+      我们一直觉得很幸运——
+      有这样的爸爸，也有这样的妈妈。
+      你们一个在前面撑着，一个在后面默默扛着，
+      把这个家一寸一寸地，攒成了我们最安心的地方。
+    </p>
+    <p class="reveal reveal-d-3">
+      你为这个家做了那么多，从来不说。
+      可我们都看在眼里，记在心里。
+    </p>
+    <div class="pull reveal reveal-d-4">
+      “你们爱了我们这么多年，<br/>往后，换我们爱你们。”
+    </div>
+  </div>
+</section>
+
+<!-- ===== SCENE 4: FAMILY ===== -->
+<section class="family" id="family">
+  <div class="img reveal" data-zoom>
+    <img src="photos/family.jpg" alt="全家福"/>
+  </div>
+  <div class="overlay reveal reveal-d-2">
+    <div class="eb">Chapter Four · 我 们 的 家</div>
+    <h2>有你在的地方，<br/>就是家。</h2>
+    <p>
+      山再高，云再厚，照片里的我们都在笑。
+      因为你站在中间——你在哪里，哪里就是我们的方向。
+    </p>
+  </div>
+  <div class="meta reveal reveal-d-3">
+    Together<span>FAMILY · FOREVER</span>
+  </div>
+</section>
+
+<!-- ===== SCENE 5: LETTERS ===== -->
+<section class="letters" id="letters">
+  <div class="head reveal">
+    <div class="eyebrow" style="justify-content:center">Chapter Five · 我 们 想 对 你 说</div>
+    <h2 style="font-size:clamp(40px,5vw,72px);margin-top:22px;font-weight:400">两封<em style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--rose-deep);font-weight:300">悄悄话</em>，给妈妈。</h2>
+  </div>
+
+  <div class="grid">
+    <article class="letter reveal">
+      <div class="stamp">With<br/>LOVE<br/>2026</div>
+      <div class="from">— FROM YOUR ELDEST</div>
+      <h3>给妈妈的<em>第一封信</em></h3>
+      <div class="body">妈妈：
+
+我和妹妹聊起你，
+说着说着就笑了，
+说着说着，又有点想哭。
+
+这么多年，
+你好像从来没有抱怨过什么。
+事再难，你也是默默地把它做完；
+苦再多，你也从不让我们尝到。
+
+你把所有的烦恼藏在身后，
+留给我们的，永远是干净的家、
+热好的饭、和那句"妈妈不累"。
+
+我曾经以为天下的妈妈都这样，
+长大以后才知道——
+没有谁理所应当对一个人这么好。
+那是你的选择，是你的爱。
+
+妈妈，你那么包容，那么温柔，
+这世上不会再有比你更好的妈妈了。
+你辛苦了。
+
+往后，
+换我们悄悄地，对你好。</div>
+      <div class="sig">— 你的大孩子，敬上</div>
+    </article>
+
+    <article class="letter reveal reveal-d-2">
+      <div class="stamp">With<br/>LOVE<br/>2026</div>
+      <div class="from">— FROM YOUR LITTLE ONE</div>
+      <h3>给妈妈的<em>第二封信</em></h3>
+      <div class="body">亲爱的妈妈，
+母亲节快乐！
+
+为了我们这个家庭，
+你任劳任怨，
+辛辛苦苦地养家挣钱。
+
+你有很多很多爱，
+都给了我们，
+但只给你自己留了很少。
+
+以后我们赚到钱了，
+会好好孝敬你们的
+✌︎˶╹ꇴ╹˶✌︎</div>
+      <div class="sig">— 你的小棉袄</div>
+    </article>
+  </div>
+</section>
+
+<!-- ===== SCENE 6: FINAL ===== -->
+<section class="final" id="final">
+  <div class="img-wrap reveal" data-zoom>
+    <img src="photos/mom-solo.jpg" alt="妈妈"/>
+  </div>
+  <div class="text">
+    <div class="eb reveal">Chapter Six · 永 远</div>
+    <h2 class="reveal reveal-d-1">愿你永远<br/><em>被这世界温柔以待。</em></h2>
+    <p class="reveal reveal-d-2">
+      点一下下面这颗心吧。<br/>
+      每一颗，都是我和妹妹想悄悄塞进你口袋里的——<br/>
+      “妈妈，我爱你。”
+    </p>
+    <button class="heart-btn reveal reveal-d-3" id="heartBtn">
+      <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9C.7 8.5 2.8 4.5 7 4.5c2 0 3.5 1 5 2.7 1.5-1.7 3-2.7 5-2.7 4.2 0 6.3 4 4.5 7.5C19 16.5 12 21 12 21z"/></svg>
+      送一颗心给妈妈
+    </button>
+    <div class="heart-counter reveal reveal-d-4">已送出 <b id="heartCount">0</b> 颗心 · keep tapping</div>
+  </div>
+</section>
+
+<!-- Epilogue -->
+<section class="epilogue">
+  <div class="l reveal"></div>
+  <h4 class="reveal reveal-d-1">妈妈，<em>母亲节快乐</em>。</h4>
+  <div class="sig reveal reveal-d-2">— 你的两个孩子，敬上</div>
+  <div class="date reveal reveal-d-3">2026 · 05 · 10</div>
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <button class="close" id="lbClose">×</button>
+  <button class="nav prev" id="lbPrev">‹</button>
+  <img id="lbImg" src="" alt=""/>
+  <button class="nav next" id="lbNext">›</button>
+  <div class="meta" id="lbMeta"></div>
+</div>
+
+<script>
+  /* ---------- Curtain dismiss ---------- */
+  setTimeout(()=>document.getElementById('curtain').classList.add('gone'), 3600);
+
+  /* ---------- Custom cursor ---------- */
+  const cur=document.getElementById('cursor'), ring=document.getElementById('cursorRing');
+  let mx=window.innerWidth/2, my=window.innerHeight/2, rx=mx, ry=my;
+  window.addEventListener('mousemove',e=>{
+    mx=e.clientX; my=e.clientY;
+    cur.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;
+  });
+  function loop(){
+    rx+=(mx-rx)*0.18; ry+=(my-ry)*0.18;
+    ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+    requestAnimationFrame(loop);
+  }
+  loop();
+  document.querySelectorAll('a,button,.card,[data-photo]').forEach(el=>{
+    el.addEventListener('mouseenter',()=>ring.classList.add('hover'));
+    el.addEventListener('mouseleave',()=>ring.classList.remove('hover'));
+  });
+
+  /* ---------- Reveal on scroll ---------- */
+  const io=new IntersectionObserver((es)=>{
+    es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:0.12, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal, .card, [data-zoom]').forEach(el=>io.observe(el));
+
+  /* ---------- Progress bar ---------- */
+  const pb=document.getElementById('progress');
+  window.addEventListener('scroll',()=>{
+    const h=document.documentElement.scrollHeight-window.innerHeight;
+    pb.style.width=(window.scrollY/h*100)+'%';
+  });
+
+  /* ---------- Petals ---------- */
+  const ptHost=document.getElementById('petals');
+  function spawnPetal(){
+    const p=document.createElement('div');
+    p.className='petal';
+    const x=Math.random()*100, dur=10+Math.random()*14, sway=40+Math.random()*120, size=8+Math.random()*14, delay=Math.random()*4, rot=Math.random()*360;
+    p.style.left=x+'vw';
+    p.style.width=p.style.height=size+'px';
+    p.style.opacity=(.35+Math.random()*.45);
+    p.style.transform=`rotate(${rot}deg)`;
+    p.animate(
+      [
+        {transform:`translate(0,-20px) rotate(${rot}deg)`},
+        {transform:`translate(${sway}px, 60vh) rotate(${rot+180}deg)`},
+        {transform:`translate(${-sway/2}px, 110vh) rotate(${rot+360}deg)`}
+      ],
+      {duration:dur*1000, delay:delay*1000, easing:'cubic-bezier(.45,.05,.55,.95)', iterations:Infinity}
+    );
+    ptHost.appendChild(p);
+  }
+  const isPhone = window.matchMedia('(max-width:880px)').matches;
+  const petalCount = isPhone ? 10 : 24;
+  for(let i=0;i<petalCount;i++) spawnPetal();
+
+  /* ---------- Smooth scroll ---------- */
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',e=>{
+      const id=a.getAttribute('href'); if(id.length<2) return;
+      const t=document.querySelector(id); if(!t) return;
+      e.preventDefault();
+      t.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+
+  /* ---------- Lightbox ---------- */
+  const lb=document.getElementById('lightbox'), lbImg=document.getElementById('lbImg'), lbMeta=document.getElementById('lbMeta');
+  const cards=[...document.querySelectorAll('[data-photo]')];
+  let lbIdx=0;
+  function openLB(i){ lbIdx=(i+cards.length)%cards.length; lbImg.src=cards[lbIdx].dataset.photo; lbMeta.textContent=cards[lbIdx].dataset.cap||''; lb.classList.add('open'); }
+  function closeLB(){ lb.classList.remove('open'); }
+  cards.forEach((c,i)=>c.addEventListener('click',()=>openLB(i)));
+  document.getElementById('lbClose').onclick=closeLB;
+  document.getElementById('lbPrev').onclick=(e)=>{e.stopPropagation();openLB(lbIdx-1)};
+  document.getElementById('lbNext').onclick=(e)=>{e.stopPropagation();openLB(lbIdx+1)};
+  lb.addEventListener('click',e=>{ if(e.target===lb) closeLB(); });
+  document.addEventListener('keydown',e=>{
+    if(!lb.classList.contains('open')) return;
+    if(e.key==='Escape') closeLB();
+    if(e.key==='ArrowLeft') openLB(lbIdx-1);
+    if(e.key==='ArrowRight') openLB(lbIdx+1);
+  });
+
+  /* ---------- Heart sender ---------- */
+  const heartBtn=document.getElementById('heartBtn');
+  const heartCountEl=document.getElementById('heartCount');
+  let hCount = parseInt(localStorage.getItem('mama_hearts')||'0',10);
+  heartCountEl.textContent=hCount;
+  const hearts=['❤','❥','♥','💗','💖'];
+  heartBtn.addEventListener('click',(e)=>{
+    hCount++; heartCountEl.textContent=hCount;
+    localStorage.setItem('mama_hearts',hCount);
+    const r=heartBtn.getBoundingClientRect();
+    const cx=r.left+r.width/2, cy=r.top+r.height/2;
+    const burst=3+Math.floor(Math.random()*3);
+    for(let i=0;i<burst;i++){
+      const h=document.createElement('div');
+      h.className='flying-heart';
+      h.textContent=hearts[Math.floor(Math.random()*hearts.length)];
+      h.style.left=cx+'px'; h.style.top=cy+'px';
+      h.style.fontSize=(20+Math.random()*22)+'px';
+      h.style.setProperty('--dx',((Math.random()-.5)*240)+'px');
+      h.style.animationDelay=(i*0.08)+'s';
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(),3000);
+    }
+    if(hCount===1){ flashMsg('妈妈一定能感受到 ❤'); }
+    else if(hCount===10){ flashMsg('十颗心 — 我们对你的爱，刚刚开始'); }
+    else if(hCount===50){ flashMsg('五十颗 — 这一辈子都送不完'); }
+    else if(hCount===100){ flashMsg('一百颗 ✦ 你是我和妹妹的世界'); }
+  });
+
+  function flashMsg(text){
+    const m=document.createElement('div');
+    m.textContent=text;
+    Object.assign(m.style,{
+      position:'fixed', top:'42%', left:'50%', transform:'translate(-50%,-50%) scale(.9)',
+      padding:'22px 36px', background:'rgba(20,8,10,.92)', color:'#fbf6ef',
+      fontFamily:'"Noto Serif SC",serif', fontSize:'18px', letterSpacing:'.18em',
+      borderRadius:'4px', zIndex:'600', opacity:'0',
+      transition:'all .6s cubic-bezier(.2,.7,.3,1)', boxShadow:'0 30px 80px -20px rgba(0,0,0,.5)',
+      border:'1px solid rgba(184,138,85,.4)'
+    });
+    document.body.appendChild(m);
+    requestAnimationFrame(()=>{ m.style.opacity='1'; m.style.transform='translate(-50%,-50%) scale(1)'; });
+    setTimeout(()=>{ m.style.opacity='0'; m.style.transform='translate(-50%,-50%) scale(.96)'; },2200);
+    setTimeout(()=>m.remove(),3000);
+  }
+
+  /* ---------- Ambient music (Web Audio, fully synthesized) ----------
+     A slow I–vi–IV–V (C–Am–F–G) pad with two slightly detuned sine
+     voices per chord tone, a warm low-pass filter, soft delay/echo,
+     and occasional pentatonic bell sparkles. Self-contained — no files. */
+  const Music = (() => {
+    let ctx, master, filter, delay, fb, wet, chordTimer, idx = 0, on = false;
+    const chords = [
+      [130.81, 164.81, 196.00, 261.63], // C  major
+      [110.00, 164.81, 220.00, 261.63], // Am 7
+      [ 87.31, 130.81, 174.61, 220.00], // F  major
+      [ 98.00, 146.83, 196.00, 246.94]  // G  major
+    ];
+    const bells = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50]; // C major pentatonic
+    function init(){
+      if(ctx) return;
+      const AC = window.AudioContext || window.webkitAudioContext;
+      ctx = new AC();
+      master = ctx.createGain(); master.gain.value = 0;
+      filter = ctx.createBiquadFilter(); filter.type='lowpass'; filter.frequency.value=1600; filter.Q.value=0.6;
+      delay  = ctx.createDelay(2.0); delay.delayTime.value = 0.42;
+      fb     = ctx.createGain(); fb.gain.value = 0.32;
+      wet    = ctx.createGain(); wet.gain.value = 0.35;
+      master.connect(filter);
+      filter.connect(ctx.destination);
+      filter.connect(delay);
+      delay.connect(fb).connect(delay);
+      delay.connect(wet).connect(ctx.destination);
+    }
+    function pad(freq, when, dur, vol=0.045){
+      [-4, 4].forEach(detune => {
+        const o = ctx.createOscillator(); o.type='sine'; o.frequency.value=freq; o.detune.value=detune;
+        const g = ctx.createGain();
+        g.gain.setValueAtTime(0, when);
+        g.gain.linearRampToValueAtTime(vol, when + 1.4);
+        g.gain.linearRampToValueAtTime(vol*0.7, when + dur - 1.2);
+        g.gain.linearRampToValueAtTime(0, when + dur);
+        o.connect(g).connect(master);
+        o.start(when); o.stop(when + dur + 0.1);
+      });
+    }
+    function bell(freq, when){
+      const o = ctx.createOscillator(); o.type='triangle'; o.frequency.value=freq;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0, when);
+      g.gain.linearRampToValueAtTime(0.04, when + 0.04);
+      g.gain.exponentialRampToValueAtTime(0.0008, when + 2.6);
+      o.connect(g).connect(master);
+      o.start(when); o.stop(when + 2.7);
+    }
+    function tick(){
+      if(!on) return;
+      const t = ctx.currentTime + 0.05;
+      chords[idx % chords.length].forEach(f => pad(f, t, 6.6, 0.045));
+      if (Math.random() < 0.75){
+        const n = 1 + Math.floor(Math.random() * 3);
+        for(let i=0; i<n; i++){
+          bell(bells[Math.floor(Math.random()*bells.length)], t + 0.4 + i*1.2 + Math.random()*0.3);
+        }
+      }
+      idx++;
+    }
+    return {
+      start(){
+        init();
+        ctx.resume();
+        on = true;
+        master.gain.cancelScheduledValues(ctx.currentTime);
+        master.gain.setTargetAtTime(1.0, ctx.currentTime, 1.4);
+        tick();
+        chordTimer = setInterval(tick, 6000);
+      },
+      stop(){
+        on = false;
+        clearInterval(chordTimer);
+        if(master) master.gain.setTargetAtTime(0, ctx.currentTime, 0.9);
+      }
+    };
+  })();
+  const audioBtn = document.getElementById('audioBtn');
+  let musicOn = false;
+  audioBtn.addEventListener('click', () => {
+    if(musicOn){ Music.stop(); audioBtn.textContent='♪ MUSIC OFF'; }
+    else      { Music.start(); audioBtn.textContent='♫ MUSIC ON';  }
+    musicOn = !musicOn;
+  });
+
+  /* ---------- Subtle parallax on hero image (desktop only) ---------- */
+  const heroImg=document.querySelector('.hero-img img');
+  if(!isPhone){
+    window.addEventListener('mousemove',e=>{
+      if(!heroImg) return;
+      const x=(e.clientX/window.innerWidth-.5)*8;
+      const y=(e.clientY/window.innerHeight-.5)*8;
+      heroImg.style.transform=`scale(1.05) translate(${x}px,${y}px)`;
+    });
+  }
+
+  /* ---------- Touch swipe for lightbox ---------- */
+  let tStartX=0, tStartY=0;
+  lb.addEventListener('touchstart',e=>{
+    if(e.touches.length!==1) return;
+    tStartX=e.touches[0].clientX; tStartY=e.touches[0].clientY;
+  },{passive:true});
+  lb.addEventListener('touchend',e=>{
+    if(!e.changedTouches.length) return;
+    const dx=e.changedTouches[0].clientX-tStartX;
+    const dy=e.changedTouches[0].clientY-tStartY;
+    if(Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)){ openLB(lbIdx + (dx<0?1:-1)); }
+    else if(dy<-80){ closeLB(); }
+  },{passive:true});
+</script>
+</body>
+</html>
